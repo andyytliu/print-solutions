@@ -62,6 +62,11 @@ func ReadSolutions(reader *bufio.Reader,
 
 		writer.WriteString(vars[idx1] + " -> ")
 
+		// Empty solution is just 0
+		if len(fields) == 1 {
+			writer.WriteString("0")
+		}
+
 		for i := 0; i < len(fields) / 2; i++ {
 			idx2, err := strconv.ParseInt(fields[2*i + 1], 10, 64)
 			if err != nil {
@@ -75,8 +80,11 @@ func ReadSolutions(reader *bufio.Reader,
 					fields[2*i + 2] + ". " + err.Error())
 			}
 
-			writer.WriteString("+(" + strconv.FormatInt(int64(coef), 10) + ")*" + vars[idx2])
-
+			out := "+(" + strconv.FormatInt(int64(coef), 10) + ")"
+			if idx2 != 0 {
+				out += ("*" + vars[idx2])
+			}
+			writer.WriteString(out)
 		}
 		writer.WriteString(",\n")
 
